@@ -1,16 +1,12 @@
 -- ============================================================
 -- LCR GAMERS Collection Vault — Initial Schema
--- Run this in your Supabase SQL Editor
 -- ============================================================
-
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ============================================================
 -- Table: items
 -- ============================================================
 CREATE TABLE IF NOT EXISTS public.items (
-  id            UUID          PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id            UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
   type          TEXT          NOT NULL CHECK (type IN ('console', 'game')),
   title         TEXT          NOT NULL,
   description   TEXT,
@@ -53,7 +49,7 @@ CREATE POLICY "Users can delete own items"
   USING (auth.uid() = user_id);
 
 -- ============================================================
--- Auto-update updated_at
+-- Auto-update updated_at trigger
 -- ============================================================
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
@@ -68,31 +64,36 @@ CREATE TRIGGER update_items_updated_at
   FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 -- ============================================================
--- Storage: item-images bucket
--- Run separately in Supabase Dashboard > Storage
+-- Storage: item-images bucket + RLS
 -- ============================================================
--- INSERT INTO storage.buckets (id, name, public)
--- VALUES ('item-images', 'item-images', false)
--- ON CONFLICT (id) DO NOTHING;
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('item-images', 'item-images', false)
+ON CONFLICT (id) DO NOTHING;
 
--- Storage RLS (run after creating the bucket)
--- CREATE POLICY "Users upload own images"
---   ON storage.objects FOR INSERT
---   WITH CHECK (
---     bucket_id = 'item-images'
---     AND auth.uid()::text = (storage.foldername(name))[1]
---   );
+CREATE POLICY "Users upload own images"
+  ON storage.objects FOR INSERT
+  WITH CHECK (
+    bucket_id = 'item-images'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+  );
 
--- CREATE POLICY "Users view own images"
---   ON storage.objects FOR SELECT
---   USING (
---     bucket_id = 'item-images'
---     AND auth.uid()::text = (storage.foldername(name))[1]
---   );
+CREATE POLICY "Users view own images"
+  ON storage.objects FOR SELECT
+  USING (
+    bucket_id = 'item-images'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+  );
 
--- CREATE POLICY "Users delete own images"
---   ON storage.objects FOR DELETE
---   USING (
---     bucket_id = 'item-images'
---     AND auth.uid()::text = (storage.foldername(name))[1]
---   );
+CREATE POLICY "Users update own images"
+  ON storage.objects FOR UPDATE
+  USING (
+    bucket_id = 'item-images'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+CREATE POLICY "Users delete own images"
+  ON storage.objects FOR DELETE
+  USING (
+    bucket_id = 'item-images'
+    AND auth.uid()::text = (storage.foldername(name))[1]
+  );
