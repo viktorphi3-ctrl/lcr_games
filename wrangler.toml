@@ -1,0 +1,11 @@
+name = "lcr-games-collection-vault"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[[kv_namespaces]]
+# Add KV namespaces here if needed in the future
+
+[vars]
+# Public vars (non-secret)
+# NEXT_PUBLIC_SUPABASE_URL = "set-in-cloudflare-dashboard"
