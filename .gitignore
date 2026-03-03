@@ -17,6 +17,19 @@
 /.next/
 /out/
 
+# opennextjs cloudflare build output
+/.open-next/
+
+# build logs
+build.log
+build_error.log
+
+# supabase
+supabase/.temp/
+
+# wrangler backup
+wrangler.toml.bak
+
 # production
 /build
 
