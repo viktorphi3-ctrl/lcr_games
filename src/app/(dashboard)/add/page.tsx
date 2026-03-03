@@ -1,7 +1,7 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-
+export const runtime = "edge";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -200,11 +200,10 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
               key={t}
               type="button"
               onClick={() => set("type", t)}
-              className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all ${
-                form.type === t
+              className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all ${form.type === t
                   ? "border-[#00e6e6]/50 bg-[#00e6e6]/10 text-[#00e6e6] shadow-[0_0_12px_rgba(0,230,230,0.1)]"
                   : "border-[#1e1e1e] text-[#555555] hover:border-[#333333] hover:text-[#e0e0e0]"
-              }`}
+                }`}
             >
               {t === "game" ? "🎮 Jogo" : "🖥️ Console"}
             </button>

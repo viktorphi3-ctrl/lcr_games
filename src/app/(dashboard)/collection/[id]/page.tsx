@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-
+export const runtime = "edge";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency, getConditionClass } from "@/lib/utils";
 import { notFound } from "next/navigation";
@@ -86,11 +86,10 @@ export default async function ItemDetailPage({
             {images.map((url, i) => (
               <div
                 key={i}
-                className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 bg-[#111111] cursor-pointer transition-all ${
-                  i === 0
+                className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 bg-[#111111] cursor-pointer transition-all ${i === 0
                     ? "border-[#00e6e6] shadow-[0_0_10px_rgba(0,230,230,0.2)]"
                     : "border-[#1e1e1e] hover:border-[#00e6e6]/50"
-                }`}
+                  }`}
               >
                 <Image
                   src={url}

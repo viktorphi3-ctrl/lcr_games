@@ -1,7 +1,7 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-
+export const runtime = "edge";
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -141,11 +141,10 @@ export default function CollectionPage() {
                 <button
                   key={t}
                   onClick={() => setTypeFilter(t)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
-                    typeFilter === t
+                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${typeFilter === t
                       ? "bg-[#00e6e6]/10 text-[#00e6e6] border border-[#00e6e6]/30"
                       : "text-[#555555] hover:text-[#e0e0e0]"
-                  }`}
+                    }`}
                 >
                   {t === "all" ? "Todos" : t === "game" ? "Jogos" : "Consoles"}
                 </button>
@@ -197,21 +196,19 @@ export default function CollectionPage() {
           <div className="flex bg-[#0a0a0a] border border-[#1e1e1e] rounded-lg p-0.5">
             <button
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded-md transition-all ${
-                viewMode === "list"
+              className={`p-1.5 rounded-md transition-all ${viewMode === "list"
                   ? "bg-[#00e6e6]/10 text-[#00e6e6]"
                   : "text-[#555555] hover:text-[#e0e0e0]"
-              }`}
+                }`}
             >
               <List size={15} />
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-md transition-all ${
-                viewMode === "grid"
+              className={`p-1.5 rounded-md transition-all ${viewMode === "grid"
                   ? "bg-[#00e6e6]/10 text-[#00e6e6]"
                   : "text-[#555555] hover:text-[#e0e0e0]"
-              }`}
+                }`}
             >
               <LayoutGrid size={15} />
             </button>
