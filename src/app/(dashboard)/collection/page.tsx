@@ -130,7 +130,7 @@ export default function CollectionPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar por nome..."
-            className="w-full bg-[#0a0a0a] border border-[#1e1e1e] text-[#e0e0e0] rounded-xl pl-10 pr-4 py-2.5 text-sm placeholder:text-[#3a3a3a] focus:outline-none focus:border-[#00e6e6] focus:shadow-[0_0_0_1px_#00e6e6] transition-all"
+            className="w-full bg-[#0a0a0a] border border-[#1e1e1e] text-[#e0e0e0] rounded-xl pl-10 pr-4 py-3 text-sm placeholder:text-[#3a3a3a] focus:outline-none focus:border-[#00e6e6] focus:shadow-[0_0_0_1px_#00e6e6] transition-all"
           />
         </div>
 
@@ -142,7 +142,7 @@ export default function CollectionPage() {
                 <button
                   key={t}
                   onClick={() => setTypeFilter(t)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${typeFilter === t
+                  className={`px-3 py-2.5 sm:py-1.5 min-h-[40px] sm:min-h-[0] rounded-md text-xs font-medium transition-all ${typeFilter === t
                     ? "bg-[#00e6e6]/10 text-[#00e6e6] border border-[#00e6e6]/30"
                     : "text-[#555555] hover:text-[#e0e0e0]"
                     }`}
@@ -158,7 +158,7 @@ export default function CollectionPage() {
               onChange={(e) =>
                 setConditionFilter(e.target.value as ItemCondition | "all")
               }
-              className="bg-[#0a0a0a] border border-[#1e1e1e] text-[#e0e0e0] rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-[#00e6e6] cursor-pointer"
+              className="bg-[#0a0a0a] border border-[#1e1e1e] text-[#e0e0e0] rounded-lg px-3 py-2.5 sm:py-1.5 min-h-[40px] sm:min-h-[0] text-xs focus:outline-none focus:border-[#00e6e6] cursor-pointer"
             >
               <option value="all">Condição</option>
               {CONDITIONS.map((c) => (
@@ -172,7 +172,7 @@ export default function CollectionPage() {
             <select
               value={platformFilter}
               onChange={(e) => setPlatformFilter(e.target.value)}
-              className="bg-[#0a0a0a] border border-[#1e1e1e] text-[#e0e0e0] rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-[#00e6e6] cursor-pointer"
+              className="bg-[#0a0a0a] border border-[#1e1e1e] text-[#e0e0e0] rounded-lg px-3 py-2.5 sm:py-1.5 min-h-[40px] sm:min-h-[0] text-xs focus:outline-none focus:border-[#00e6e6] cursor-pointer"
             >
               <option value="all">Plataforma</option>
               {allPlatforms.map((p) => (
@@ -186,7 +186,7 @@ export default function CollectionPage() {
             {hasFilters && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs text-[#ff1a75] border border-[#ff1a75]/30 hover:bg-[#ff1a75]/10 transition-all"
+                className="flex items-center gap-1 px-3 py-2.5 sm:py-1.5 min-h-[40px] sm:min-h-[0] rounded-lg text-xs text-[#ff1a75] border border-[#ff1a75]/30 hover:bg-[#ff1a75]/10 transition-all"
               >
                 <X size={12} /> Limpar
               </button>
@@ -197,7 +197,7 @@ export default function CollectionPage() {
           <div className="flex bg-[#0a0a0a] border border-[#1e1e1e] rounded-lg p-0.5">
             <button
               onClick={() => setViewMode("list")}
-              className={`p-1.5 rounded-md transition-all ${viewMode === "list"
+              className={`p-2.5 sm:p-1.5 min-h-[40px] sm:min-h-[0] rounded-md transition-all ${viewMode === "list"
                 ? "bg-[#00e6e6]/10 text-[#00e6e6]"
                 : "text-[#555555] hover:text-[#e0e0e0]"
                 }`}
@@ -206,7 +206,7 @@ export default function CollectionPage() {
             </button>
             <button
               onClick={() => setViewMode("grid")}
-              className={`p-1.5 rounded-md transition-all ${viewMode === "grid"
+              className={`p-2.5 sm:p-1.5 min-h-[40px] sm:min-h-[0] rounded-md transition-all ${viewMode === "grid"
                 ? "bg-[#00e6e6]/10 text-[#00e6e6]"
                 : "text-[#555555] hover:text-[#e0e0e0]"
                 }`}

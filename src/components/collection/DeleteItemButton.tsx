@@ -23,7 +23,7 @@ export function DeleteItemButton({ itemId }: { itemId: string }) {
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all border border-[#ff1a75]/40 text-[#ff1a75] hover:bg-[#ff1a75]/10 hover:shadow-[0_0_15px_rgba(255,26,117,0.15)] disabled:opacity-50"
+      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-all text-[#ff1a75]/60 hover:text-[#ff1a75] hover:bg-[#ff1a75]/10 disabled:opacity-50"
     >
       {loading ? (
         <>

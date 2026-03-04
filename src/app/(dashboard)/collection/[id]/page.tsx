@@ -249,12 +249,16 @@ export default async function ItemDetailPage({
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col gap-3 pt-8 mt-4 border-t border-[#1e1e1e]/50">
             <Link
               href={`/collection/${item.id}/edit`}
-              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all border border-[#00e6e6]/40 text-[#00e6e6] hover:bg-[#00e6e6]/10 hover:shadow-[0_0_15px_rgba(0,230,230,0.1)]"
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-sm transition-all transform hover:scale-[1.01] active:scale-[0.98] text-[#0a0a0a]"
+              style={{
+                background: "linear-gradient(135deg, #00e6e6, #ff1a75)",
+                boxShadow: "0 0 20px rgba(0, 230, 230, 0.2)",
+              }}
             >
-              <Edit size={16} />
+              <Edit size={18} />
               Editar Item
             </Link>
             <DeleteItemButton itemId={item.id} />

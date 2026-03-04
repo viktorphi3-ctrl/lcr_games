@@ -96,7 +96,7 @@ export default async function DashboardPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
+        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 transition-all transform hover:scale-[1.02] hover:border-[#00e6e6]/30 hover:shadow-[0_0_20px_rgba(0,230,230,0.05)]">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-[#555555] uppercase tracking-wider">
               Total Itens
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
           <p className="text-xs text-[#555555] mt-1">na coleção</p>
         </div>
 
-        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
+        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 transition-all transform hover:scale-[1.02] hover:border-[#00e6e6]/30 hover:shadow-[0_0_20px_rgba(0,230,230,0.05)]">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-[#555555] uppercase tracking-wider">
               Investido
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
+        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 transition-all transform hover:scale-[1.02] hover:border-[#00e6e6]/30 hover:shadow-[0_0_20px_rgba(0,230,230,0.05)]">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-[#555555] uppercase tracking-wider">
               Consoles
@@ -153,7 +153,7 @@ export default async function DashboardPage() {
           <p className="text-xs text-[#555555] mt-1">unidades</p>
         </div>
 
-        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
+        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 transition-all transform hover:scale-[1.02] hover:border-[#00e6e6]/30 hover:shadow-[0_0_20px_rgba(0,230,230,0.05)]">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-[#555555] uppercase tracking-wider">
               Jogos
@@ -171,7 +171,7 @@ export default async function DashboardPage() {
           <p className="text-xs text-[#555555] mt-1">títulos</p>
         </div>
 
-        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
+        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 transition-all transform hover:scale-[1.02] hover:border-[#00e6e6]/30 hover:shadow-[0_0_20px_rgba(0,230,230,0.05)]">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-[#555555] uppercase tracking-wider">
               Acessórios
@@ -198,7 +198,7 @@ export default async function DashboardPage() {
           </h2>
           <Link
             href="/collection"
-            className="flex items-center gap-1 text-xs text-[#00e6e6] hover:text-[#00b3b3] transition-colors"
+            className="flex items-center gap-1 text-xs font-medium text-[#00e6e6] hover:text-[#00ffff] bg-[#00e6e6]/10 hover:bg-[#00e6e6]/20 px-4 py-2 rounded-lg transition-all"
           >
             Ver todos <ArrowRight size={13} />
           </Link>
@@ -210,7 +210,7 @@ export default async function DashboardPage() {
             <p className="text-[#555555] text-sm">Nenhum item ainda.</p>
             <Link
               href="/add"
-              className="inline-block mt-3 text-[#00e6e6] text-sm hover:underline"
+              className="inline-block mt-4 text-[#00e6e6] text-sm font-semibold hover:text-[#0a0a0a] hover:bg-[#00e6e6] border border-[#00e6e6] px-6 py-3 rounded-xl transition-all"
             >
               Adicionar primeiro item →
             </Link>
