@@ -49,6 +49,11 @@ export default async function EditItemPage({
             platform: item.platform,
             condition: item.condition,
             purchase_price: item.purchase_price?.toString() || "",
+            box_condition: item.box_condition || "",
+            market_value: item.market_value?.toString() || "",
+            units_sold: item.units_sold?.toString() || "",
+            developer: item.developer || "",
+            included_items: item.included_items || "",
           }}
         />
       </div>
