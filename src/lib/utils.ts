@@ -24,10 +24,9 @@ export function formatDate(dateString: string): string {
 export function getConditionClass(condition: ItemCondition): string {
   const map: Record<ItemCondition, string> = {
     CIB: "badge-cib",
-    Sealed: "badge-sealed",
-    Loose: "badge-loose",
-    Damaged: "badge-damaged",
-    Restored: "badge-restored",
+    MINT: "badge-sealed",
+    LOOSE: "badge-loose",
+    RELABEL: "badge-restored",
   };
   return map[condition] ?? "badge-loose";
 }
