@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import type { ItemType, ItemCondition } from "@/types";
+import type { ItemType, ItemCondition, ItemBoxCondition } from "@/types";
 
 const PLATFORMS = [
   "Nintendo Entertainment System",
@@ -44,7 +44,9 @@ const PLATFORMS = [
   "Outro",
 ];
 
-const CONDITIONS: ItemCondition[] = ["CIB", "Loose", "Sealed", "Damaged", "Restored"];
+const CONDITIONS: ItemCondition[] = ["CIB", "LOOSE", "MINT", "RELABEL"];
+
+const BOX_CONDITIONS: ItemBoxCondition[] = ["sem caixa", "com caixa", "caixa danificada"];
 
 interface FormState {
   type: ItemType;
@@ -53,7 +55,12 @@ interface FormState {
   release_year: string;
   platform: string;
   condition: ItemCondition;
+  box_condition: ItemBoxCondition | "";
   purchase_price: string;
+  market_value: string;
+  units_sold: string;
+  developer: string;
+  included_items: string;
 }
 
 const INITIAL: FormState = {
@@ -63,7 +70,12 @@ const INITIAL: FormState = {
   release_year: "",
   platform: "",
   condition: "CIB",
+  box_condition: "",
   purchase_price: "",
+  market_value: "",
+  units_sold: "",
+  developer: "",
+  included_items: "",
 };
 
 interface ItemFormProps {
@@ -74,6 +86,7 @@ interface ItemFormProps {
 
 function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps) {
   const [form, setForm] = useState<FormState>({ ...INITIAL, ...defaultValues });
+  const [existingUrls, setExistingUrls] = useState<string[]>(existingImages);
   const [imagePreviews, setImagePreviews] = useState<string[]>(existingImages);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -91,7 +104,7 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
 
-    const remaining = 3 - imagePreviews.length;
+    const remaining = 4 - imagePreviews.length;
     const toAdd = files.slice(0, remaining);
 
     setImageError(null);
@@ -109,9 +122,10 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
 
   function removeImage(index: number) {
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
-    // Only remove from files if it's a new file (not existing)
-    const newFileIndex = index - existingImages.length;
-    if (newFileIndex >= 0) {
+    if (index < existingUrls.length) {
+      setExistingUrls((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      const newFileIndex = index - existingUrls.length;
       setImageFiles((prev) => prev.filter((_, i) => i !== newFileIndex));
     }
   }
@@ -130,7 +144,7 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/login"); return; }
 
-      let uploadedUrls: string[] = [...existingImages];
+      let uploadedUrls: string[] = [...existingUrls];
 
       // Upload new images
       if (imageFiles.length > 0) {
@@ -157,8 +171,12 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
         release_year: form.release_year ? parseInt(form.release_year) : null,
         platform: form.platform,
         condition: form.condition,
-        purchase_price: parseFloat(form.purchase_price) || 0,
-        image_urls: uploadedUrls.slice(0, 3),
+        box_condition: form.box_condition || null,
+        market_value: form.market_value ? (parseFloat(form.market_value) || 0) : null,
+        units_sold: form.units_sold ? (parseInt(form.units_sold) || 0) : null,
+        developer: form.developer.trim() || null,
+        included_items: form.type === "console" && form.included_items ? form.included_items.trim() : null,
+        image_urls: uploadedUrls.slice(0, 4),
         user_id: user.id,
       };
 
@@ -195,37 +213,49 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
       <div>
         <label className={labelClass}>Tipo</label>
         <div className="flex gap-2">
-          {(["game", "console"] as ItemType[]).map((t) => (
+          {(["game", "console", "accessory"] as ItemType[]).map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => set("type", t)}
               className={`flex-1 py-3 rounded-xl text-sm font-semibold border transition-all ${form.type === t
-                  ? "border-[#00e6e6]/50 bg-[#00e6e6]/10 text-[#00e6e6] shadow-[0_0_12px_rgba(0,230,230,0.1)]"
-                  : "border-[#1e1e1e] text-[#555555] hover:border-[#333333] hover:text-[#e0e0e0]"
+                ? "border-[#00e6e6]/50 bg-[#00e6e6]/10 text-[#00e6e6] shadow-[0_0_12px_rgba(0,230,230,0.1)]"
+                : "border-[#1e1e1e] text-[#555555] hover:border-[#333333] hover:text-[#e0e0e0]"
                 }`}
             >
-              {t === "game" ? "🎮 Jogo" : "🖥️ Console"}
+              {t === "game" ? "🎮 Jogo" : t === "console" ? "🖥️ Console" : "🔌 Acessório"}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Title */}
-      <div>
-        <label className={labelClass}>Título *</label>
-        <input
-          type="text"
-          value={form.title}
-          onChange={(e) => set("title", e.target.value)}
-          required
-          placeholder="Ex: Super Mario Bros. 3"
-          className={inputClass}
-        />
+      {/* Title + Developer */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className={labelClass}>Título *</label>
+          <input
+            type="text"
+            value={form.title}
+            onChange={(e) => set("title", e.target.value)}
+            required
+            placeholder="Ex: Super Mario Bros. 3"
+            className={inputClass}
+          />
+        </div>
+        <div>
+          <label className={labelClass}>Desenvolvedora / Fabricante</label>
+          <input
+            type="text"
+            value={form.developer}
+            onChange={(e) => set("developer", e.target.value)}
+            placeholder="Ex: Nintendo"
+            className={inputClass}
+          />
+        </div>
       </div>
 
-      {/* Platform + Year */}
-      <div className="grid grid-cols-2 gap-4">
+      {/* Platform, Year, Units Sold */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className={labelClass}>Plataforma *</label>
           <select
@@ -254,9 +284,20 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
             className={inputClass}
           />
         </div>
+        <div>
+          <label className={labelClass}>Unidades Vendidas</label>
+          <input
+            type="number"
+            value={form.units_sold}
+            onChange={(e) => set("units_sold", e.target.value)}
+            placeholder="Ex: 500000"
+            min="0"
+            className={inputClass}
+          />
+        </div>
       </div>
 
-      {/* Condition + Price */}
+      {/* Condition + Box Condition */}
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className={labelClass}>Condição</label>
@@ -273,6 +314,25 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
           </select>
         </div>
         <div>
+          <label className={labelClass}>Caixa</label>
+          <select
+            value={form.box_condition}
+            onChange={(e) => set("box_condition", e.target.value as ItemBoxCondition | "")}
+            className={inputClass}
+          >
+            <option value="">(Opcional)</option>
+            {BOX_CONDITIONS.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
           <label className={labelClass}>Preço Pago (R$)</label>
           <input
             type="number"
@@ -284,7 +344,33 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
             className={inputClass}
           />
         </div>
+        <div>
+          <label className={labelClass}>Valor de Mercado (R$)</label>
+          <input
+            type="number"
+            value={form.market_value}
+            onChange={(e) => set("market_value", e.target.value)}
+            placeholder="0.00"
+            min="0"
+            step="0.01"
+            className={inputClass}
+          />
+        </div>
       </div>
+
+      {/* Included Items - Only for Consoles */}
+      {form.type === "console" && (
+        <div>
+          <label className={labelClass}>Itens/Acessórios Inclusos</label>
+          <input
+            type="text"
+            value={form.included_items}
+            onChange={(e) => set("included_items", e.target.value)}
+            placeholder="Ex: 2 controles originais, fonte, cabo AV..."
+            className={inputClass}
+          />
+        </div>
+      )}
 
       {/* Description */}
       <div>
@@ -296,12 +382,8 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
           placeholder="Condição detalhada, origem, notas pessoais..."
           className={`${inputClass} resize-none`}
         />
-      </div>
-
-      {/* Images */}
-      <div>
-        <label className={labelClass}>
-          Fotos ({imagePreviews.length}/3) — Compressão automática para WebP
+        <label className={labelClass} style={{ marginTop: '24px' }}>
+          Fotos ({imagePreviews.length}/4) — Compressão automática para WebP
         </label>
 
         <div className="flex gap-3 flex-wrap">
@@ -321,7 +403,7 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
             </div>
           ))}
 
-          {imagePreviews.length < 3 && (
+          {imagePreviews.length < 4 && (
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
@@ -410,7 +492,7 @@ export default function AddPage() {
             Adicionar Item
           </h1>
           <p className="text-[#555555] text-sm">
-            Novo console ou jogo na coleção
+            Novo console, jogo ou acessório na coleção
           </p>
         </div>
       </div>

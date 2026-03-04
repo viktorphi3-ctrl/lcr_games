@@ -14,6 +14,7 @@ import {
   Monitor,
   ArrowRight,
   TrendingUp,
+  Package,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -36,6 +37,7 @@ async function getDashboardData() {
   );
   const totalConsoles = items.filter((i: Item) => i.type === "console").length;
   const totalGames = items.filter((i: Item) => i.type === "game").length;
+  const totalAccessories = items.filter((i: Item) => i.type === "accessory").length;
   const recentItems = items.slice(0, 4);
 
   const platformMap: Record<string, number> = {};
@@ -52,6 +54,7 @@ async function getDashboardData() {
     totalInvested,
     totalConsoles,
     totalGames,
+    totalAccessories,
     recentItems,
     platformBreakdown,
   };
@@ -73,6 +76,7 @@ export default async function DashboardPage() {
     totalInvested,
     totalConsoles,
     totalGames,
+    totalAccessories,
     recentItems,
     platformBreakdown,
   } = data;
@@ -91,7 +95,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
         <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-[#555555] uppercase tracking-wider">
@@ -165,6 +169,24 @@ export default async function DashboardPage() {
             {totalGames}
           </p>
           <p className="text-xs text-[#555555] mt-1">títulos</p>
+        </div>
+
+        <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 md:p-5 card-hover">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs text-[#555555] uppercase tracking-wider">
+              Acessórios
+            </p>
+            <div className="w-8 h-8 rounded-lg bg-[#aaaaaa]/10 flex items-center justify-center">
+              <Package size={15} className="text-[#aaaaaa]" />
+            </div>
+          </div>
+          <p
+            className="text-3xl font-bold text-[#e0e0e0]"
+            style={{ fontFamily: "'Orbitron', monospace" }}
+          >
+            {totalAccessories}
+          </p>
+          <p className="text-xs text-[#555555] mt-1">unidades</p>
         </div>
       </div>
 

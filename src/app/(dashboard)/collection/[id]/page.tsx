@@ -13,6 +13,10 @@ import {
   Calendar,
   Tag,
   DollarSign,
+  Package,
+  Factory,
+  Globe,
+  TrendingUp,
 } from "lucide-react";
 import type { Item } from "@/types";
 import { DeleteItemButton } from "@/components/collection/DeleteItemButton";
@@ -87,8 +91,8 @@ export default async function ItemDetailPage({
               <div
                 key={i}
                 className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 bg-[#111111] cursor-pointer transition-all ${i === 0
-                    ? "border-[#00e6e6] shadow-[0_0_10px_rgba(0,230,230,0.2)]"
-                    : "border-[#1e1e1e] hover:border-[#00e6e6]/50"
+                  ? "border-[#00e6e6] shadow-[0_0_10px_rgba(0,230,230,0.2)]"
+                  : "border-[#1e1e1e] hover:border-[#00e6e6]/50"
                   }`}
               >
                 <Image
@@ -140,27 +144,97 @@ export default async function ItemDetailPage({
                 </>
               )}
               <span className="text-[#2a2a2a]">·</span>
-              <span className="capitalize">
-                {item.type === "console" ? "Console" : "Jogo"}
+              <span className="capitalize flex items-center gap-1">
+                {item.type === "console" ? (
+                  <Monitor size={13} />
+                ) : item.type === "accessory" ? (
+                  <Package size={13} />
+                ) : (
+                  <Gamepad2 size={13} />
+                )}
+                {item.type === "console" ? "Console" : item.type === "accessory" ? "Acessório" : "Jogo"}
               </span>
+              {item.box_condition && (
+                <>
+                  <span className="text-[#2a2a2a]">·</span>
+                  <span className="flex items-center gap-1 text-[#aaaaaa]">
+                    <Package size={13} />
+                    {item.box_condition}
+                  </span>
+                </>
+              )}
             </div>
+
+            {(item.developer || item.units_sold) && (
+              <div className="flex flex-wrap items-center gap-2 text-xs text-[#666666] mt-3">
+                {item.developer && (
+                  <span className="flex items-center gap-1 bg-[#1a1a1a] px-2 py-1 rounded-md border border-[#222]">
+                    <Factory size={12} className="text-[#888]" />
+                    {item.developer}
+                  </span>
+                )}
+                {item.units_sold && (
+                  <span className="flex items-center gap-1 bg-[#1a1a1a] px-2 py-1 rounded-md border border-[#222]">
+                    <Globe size={12} className="text-[#888]" />
+                    {Number(item.units_sold).toLocaleString('pt-BR')} unidades vendidas globais
+                  </span>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Price */}
-          <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-1">
-              <DollarSign size={14} className="text-[#00e6e6]" />
-              <span className="text-xs text-[#555555] uppercase tracking-wider">
-                Preço Pago
-              </span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-1">
+                <DollarSign size={14} className="text-[#00e6e6]" />
+                <span className="text-xs text-[#555555] uppercase tracking-wider">
+                  Preço Pago
+                </span>
+              </div>
+              <p
+                className="text-2xl font-bold text-[#00e6e6]"
+                style={{ fontFamily: "'Orbitron', monospace" }}
+              >
+                {formatCurrency(item.purchase_price)}
+              </p>
             </div>
-            <p
-              className="text-2xl font-bold text-[#00e6e6]"
-              style={{ fontFamily: "'Orbitron', monospace" }}
-            >
-              {formatCurrency(item.purchase_price)}
-            </p>
+
+            {item.market_value !== null && item.market_value !== undefined && (
+              <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4 relative overflow-hidden">
+                <div className="flex items-center gap-2 mb-1">
+                  <TrendingUp size={14} className={item.purchase_price < item.market_value ? "text-[#00e676]" : "text-[#ff1a75]"} />
+                  <span className="text-xs text-[#555555] uppercase tracking-wider">
+                    Mercado
+                  </span>
+                </div>
+                <p
+                  className="text-2xl font-bold text-[#e0e0e0]"
+                  style={{ fontFamily: "'Orbitron', monospace" }}
+                >
+                  {formatCurrency(item.market_value)}
+                </p>
+                {item.purchase_price < item.market_value && (
+                  <div className="absolute top-0 right-0 bg-[#00e676]/20 text-[#00e676] text-[10px] font-bold px-2 py-1 rounded-bl-lg">
+                    Bom Negócio
+                  </div>
+                )}
+              </div>
+            )}
           </div>
+
+          {/* Included Items */}
+          {item.type === "console" && item.included_items && (
+            <div className="bg-[#111111] border border-[#1e1e1e] rounded-xl p-4">
+              <p className="text-xs flex items-center gap-1 text-[#555555] uppercase tracking-wider mb-2">
+                <Package size={13} className="text-[#00e6e6]" />
+                Itens Inclusos
+              </p>
+              <p className="text-sm text-[#e0e0e0] leading-relaxed">
+                {item.included_items}
+              </p>
+            </div>
+          )}
 
           {/* Notes */}
           {item.description && (

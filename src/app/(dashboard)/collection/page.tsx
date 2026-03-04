@@ -20,13 +20,14 @@ import {
   Trash2,
   Edit,
   X,
+  Package,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Item, ItemType, ItemCondition } from "@/types";
 import { useRouter } from "next/navigation";
 
-const CONDITIONS: ItemCondition[] = ["CIB", "Loose", "Sealed", "Damaged", "Restored"];
+const CONDITIONS: ItemCondition[] = ["CIB", "LOOSE", "MINT", "RELABEL"];
 
 export default function CollectionPage() {
   const [items, setItems] = useState<Item[]>([]);
@@ -137,16 +138,16 @@ export default function CollectionPage() {
           <div className="flex flex-wrap gap-2">
             {/* Type tabs */}
             <div className="flex bg-[#0a0a0a] border border-[#1e1e1e] rounded-lg p-0.5">
-              {(["all", "game", "console"] as const).map((t) => (
+              {(["all", "game", "console", "accessory"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setTypeFilter(t)}
                   className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${typeFilter === t
-                      ? "bg-[#00e6e6]/10 text-[#00e6e6] border border-[#00e6e6]/30"
-                      : "text-[#555555] hover:text-[#e0e0e0]"
+                    ? "bg-[#00e6e6]/10 text-[#00e6e6] border border-[#00e6e6]/30"
+                    : "text-[#555555] hover:text-[#e0e0e0]"
                     }`}
                 >
-                  {t === "all" ? "Todos" : t === "game" ? "Jogos" : "Consoles"}
+                  {t === "all" ? "Todos" : t === "game" ? "Jogos" : t === "console" ? "Consoles" : "Acessórios"}
                 </button>
               ))}
             </div>
@@ -197,8 +198,8 @@ export default function CollectionPage() {
             <button
               onClick={() => setViewMode("list")}
               className={`p-1.5 rounded-md transition-all ${viewMode === "list"
-                  ? "bg-[#00e6e6]/10 text-[#00e6e6]"
-                  : "text-[#555555] hover:text-[#e0e0e0]"
+                ? "bg-[#00e6e6]/10 text-[#00e6e6]"
+                : "text-[#555555] hover:text-[#e0e0e0]"
                 }`}
             >
               <List size={15} />
@@ -206,8 +207,8 @@ export default function CollectionPage() {
             <button
               onClick={() => setViewMode("grid")}
               className={`p-1.5 rounded-md transition-all ${viewMode === "grid"
-                  ? "bg-[#00e6e6]/10 text-[#00e6e6]"
-                  : "text-[#555555] hover:text-[#e0e0e0]"
+                ? "bg-[#00e6e6]/10 text-[#00e6e6]"
+                : "text-[#555555] hover:text-[#e0e0e0]"
                 }`}
             >
               <LayoutGrid size={15} />
@@ -252,6 +253,8 @@ export default function CollectionPage() {
                   <div className="flex items-center justify-center h-full">
                     {item.type === "console" ? (
                       <Monitor size={24} className="text-[#2a2a2a]" />
+                    ) : item.type === "accessory" ? (
+                      <Package size={24} className="text-[#2a2a2a]" />
                     ) : (
                       <Gamepad2 size={24} className="text-[#2a2a2a]" />
                     )}
@@ -316,6 +319,8 @@ export default function CollectionPage() {
                       <div className="flex items-center justify-center h-full">
                         {item.type === "console" ? (
                           <Monitor size={15} className="text-[#2a2a2a]" />
+                        ) : item.type === "accessory" ? (
+                          <Package size={15} className="text-[#2a2a2a]" />
                         ) : (
                           <Gamepad2 size={15} className="text-[#2a2a2a]" />
                         )}

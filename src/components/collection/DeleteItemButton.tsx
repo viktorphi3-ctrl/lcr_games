@@ -23,12 +23,18 @@ export function DeleteItemButton({ itemId }: { itemId: string }) {
     <button
       onClick={handleDelete}
       disabled={loading}
-      className="w-12 flex items-center justify-center py-3 rounded-xl text-sm font-semibold transition-all border border-[#ff1a75]/40 text-[#ff1a75] hover:bg-[#ff1a75]/10 hover:shadow-[0_0_15px_rgba(255,26,117,0.15)] disabled:opacity-50"
+      className="flex flex-1 items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all border border-[#ff1a75]/40 text-[#ff1a75] hover:bg-[#ff1a75]/10 hover:shadow-[0_0_15px_rgba(255,26,117,0.15)] disabled:opacity-50"
     >
       {loading ? (
-        <Loader2 size={16} className="animate-spin" />
+        <>
+          <Loader2 size={16} className="animate-spin" />
+          Excluindo...
+        </>
       ) : (
-        <Trash2 size={16} />
+        <>
+          <Trash2 size={16} />
+          Excluir Item
+        </>
       )}
     </button>
   );
