@@ -141,3 +141,32 @@
   border-color: rgba(0, 230, 230, 0.3) !important;
   box-shadow: 0 0 20px rgba(0, 230, 230, 0.08);
 }
+
+/* ─── Print / PDF ───────────────────────────────────── */
+@media print {
+  /* Hide app navigation and UI chrome */
+  nav,
+  aside,
+  header,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Clean white background */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Avoid breaking item cards across pages */
+  .print-item {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Remove shadows and transitions that don't print well */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
