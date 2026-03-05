@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:cf": "opennextjs-cloudflare build",
+    "build:cf": "opennextjs-cloudflare build && (for d in cloudflare middleware .build server-functions; do [ -d .open-next/$d ] && cp -r .open-next/$d .open-next/assets/ || true; done) && cp .open-next/worker.js .open-next/assets/_worker.js",
     "start": "next start",
     "lint": "eslint"
   },
