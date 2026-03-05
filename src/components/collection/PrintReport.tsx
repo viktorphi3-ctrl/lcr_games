@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { formatCurrency, getConditionClass } from "@/lib/utils";
 import type { Item } from "@/types";
 import { Printer } from "lucide-react";
@@ -10,7 +9,6 @@ interface PrintReportProps {
 }
 
 export function PrintReport({ items }: PrintReportProps) {
-    const totalInvested = items.reduce((sum, i) => sum + (i.purchase_price || 0), 0);
     const totalMarket = items.reduce((sum, i) => sum + (i.market_value || 0), 0);
     const dateStr = new Date().toLocaleDateString("pt-BR", {
         day: "2-digit",
@@ -20,10 +18,10 @@ export function PrintReport({ items }: PrintReportProps) {
 
     return (
         <div className="min-h-screen bg-white text-gray-900 font-sans">
-            {/* ── Print button (hidden when printing) ── */}
+            {/* Print button — hidden on print */}
             <div className="no-print sticky top-0 z-10 bg-gray-50 border-b border-gray-200 px-6 py-3 flex items-center justify-between">
                 <p className="text-sm text-gray-500">
-                    Pré-visualização do relatório — {items.length} {items.length === 1 ? "item" : "itens"}
+                    Pré-visualização — {items.length} {items.length === 1 ? "item" : "itens"}
                 </p>
                 <button
                     onClick={() => window.print()}
@@ -35,123 +33,76 @@ export function PrintReport({ items }: PrintReportProps) {
                 </button>
             </div>
 
-            {/* ── Report content ── */}
+            {/* Report */}
             <div className="max-w-[210mm] mx-auto px-8 py-8 print:px-6 print:py-6">
                 {/* Header */}
-                <div className="flex items-start justify-between mb-8 pb-6 border-b-2 border-gray-900">
+                <div className="flex items-start justify-between mb-6 pb-5 border-b-2 border-gray-900">
                     <div>
-                        <h1 className="text-2xl font-black tracking-tight text-gray-900">
-                            🎮 LCR GAMERS
-                        </h1>
-                        <p className="text-sm text-gray-500 mt-1">Collection Vault</p>
+                        <h1 className="text-2xl font-black tracking-tight">🎮 LCR GAMERS</h1>
+                        <p className="text-xs text-gray-400 mt-0.5">Collection Vault</p>
                     </div>
                     <div className="text-right">
                         <p className="text-xs text-gray-400 uppercase tracking-wider">Relatório de Coleção</p>
                         <p className="text-sm font-semibold text-gray-700 mt-0.5">{dateStr}</p>
                         <p className="text-xs text-gray-400 mt-1">
-                            {items.length} {items.length === 1 ? "item selecionado" : "itens selecionados"}
+                            {items.length} {items.length === 1 ? "item" : "itens"}
                         </p>
                     </div>
                 </div>
 
-                {/* Items Grid — 2 columns */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                    {items.map((item) => (
-                        <div
-                            key={item.id}
-                            className="print-item border border-gray-200 rounded-lg overflow-hidden flex gap-3 p-3"
-                        >
-                            {/* Image */}
-                            <div className="relative w-20 h-20 flex-shrink-0 rounded-md overflow-hidden bg-gray-100 border border-gray-200">
-                                {item.image_urls?.[0] ? (
-                                    <Image
-                                        src={item.image_urls[0]}
-                                        alt={item.title}
-                                        fill
-                                        className="object-cover"
-                                        sizes="80px"
-                                    />
-                                ) : (
-                                    <div className="flex items-center justify-center h-full text-gray-400 text-2xl">
-                                        🎮
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Data */}
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-start justify-between gap-2 mb-1">
-                                    <h2 className="text-sm font-bold text-gray-900 leading-tight line-clamp-2">
-                                        {item.title}
-                                    </h2>
-                                    <span className={`flex-shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded ${getConditionClass(item.condition)}`}>
+                {/* Table */}
+                <table className="w-full border-collapse text-sm mb-8">
+                    <thead>
+                        <tr className="border-b-2 border-gray-900">
+                            <th className="text-left py-2 pr-3 text-xs font-bold uppercase tracking-wider text-gray-500 w-[28%]">Nome</th>
+                            <th className="text-left py-2 pr-3 text-xs font-bold uppercase tracking-wider text-gray-500 w-[35%]">Descrição</th>
+                            <th className="text-right py-2 pr-3 text-xs font-bold uppercase tracking-wider text-gray-500 w-[16%]">Valor de Mercado</th>
+                            <th className="text-center py-2 pr-3 text-xs font-bold uppercase tracking-wider text-gray-500 w-[10%]">Estado</th>
+                            <th className="text-center py-2 text-xs font-bold uppercase tracking-wider text-gray-500 w-[11%]">Caixa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {items.map((item, idx) => (
+                            <tr
+                                key={item.id}
+                                className={`print-item border-b border-gray-100 ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                            >
+                                <td className="py-3 pr-3 font-semibold text-gray-900 align-top">
+                                    <span className="block">{item.title}</span>
+                                    <span className="text-[10px] text-gray-400 font-normal">{item.platform}</span>
+                                </td>
+                                <td className="py-3 pr-3 text-gray-600 text-xs align-top leading-relaxed">
+                                    {item.description || <span className="text-gray-300 italic">—</span>}
+                                </td>
+                                <td className="py-3 pr-3 text-right font-bold align-top">
+                                    {item.market_value != null
+                                        ? formatCurrency(item.market_value)
+                                        : <span className="text-gray-300">—</span>}
+                                </td>
+                                <td className="py-3 pr-3 text-center align-top">
+                                    <span className={`inline-block text-[10px] font-bold px-1.5 py-0.5 rounded ${getConditionClass(item.condition)}`}>
                                         {item.condition}
                                     </span>
-                                </div>
+                                </td>
+                                <td className="py-3 text-center text-xs text-gray-600 align-top">
+                                    {item.box_condition || <span className="text-gray-300">—</span>}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
-                                <p className="text-xs text-gray-500 mb-1.5">
-                                    {item.platform}
-                                    {item.developer && ` · ${item.developer}`}
-                                    {item.release_year && ` · ${item.release_year}`}
-                                </p>
-
-                                {item.box_condition && (
-                                    <p className="text-xs text-gray-400 mb-1.5">
-                                        Caixa: {item.box_condition}
-                                    </p>
-                                )}
-
-                                <div className="flex items-center gap-3 mt-auto">
-                                    <div>
-                                        <p className="text-[9px] text-gray-400 uppercase tracking-wider">Pago</p>
-                                        <p className="text-sm font-black text-gray-900">
-                                            {formatCurrency(item.purchase_price)}
-                                        </p>
-                                    </div>
-                                    {item.market_value != null && (
-                                        <div>
-                                            <p className="text-[9px] text-gray-400 uppercase tracking-wider">Mercado</p>
-                                            <p className={`text-sm font-bold ${item.market_value >= item.purchase_price ? "text-emerald-600" : "text-red-500"}`}>
-                                                {formatCurrency(item.market_value)}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {item.description && (
-                                    <p className="text-[10px] text-gray-400 mt-1.5 line-clamp-2 italic">
-                                        {item.description}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Footer / Totals */}
-                <div className="border-t-2 border-gray-900 pt-5 mt-2">
-                    <div className="grid grid-cols-3 gap-6 mb-4">
-                        <div className="text-center">
-                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Itens</p>
-                            <p className="text-2xl font-black text-gray-900">{items.length}</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Investido</p>
-                            <p className="text-2xl font-black text-gray-900">{formatCurrency(totalInvested)}</p>
-                        </div>
-                        {totalMarket > 0 && (
-                            <div className="text-center">
-                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Valor de Mercado</p>
-                                <p className={`text-2xl font-black ${totalMarket >= totalInvested ? "text-emerald-600" : "text-red-500"}`}>
-                                    {formatCurrency(totalMarket)}
-                                </p>
-                            </div>
-                        )}
-                    </div>
-
-                    <p className="text-center text-xs text-gray-300 mt-4">
+                {/* Footer / Total */}
+                <div className="border-t-2 border-gray-900 pt-4 flex items-center justify-between">
+                    <p className="text-xs text-gray-400">
                         Gerado por LCR Gamers · Collection Vault · {dateStr}
                     </p>
+                    {totalMarket > 0 && (
+                        <div className="text-right">
+                            <p className="text-xs text-gray-400 uppercase tracking-wider">Valor Total de Mercado</p>
+                            <p className="text-xl font-black text-gray-900">{formatCurrency(totalMarket)}</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
