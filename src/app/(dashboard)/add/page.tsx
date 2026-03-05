@@ -429,9 +429,10 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
                 <button
                   type="button"
                   onClick={() => removeImage(i)}
-                  className="absolute top-1 right-1 w-5 h-5 bg-[#ff1a75] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-1 right-1 w-6 h-6 bg-[#ff1a75]/90 hover:bg-[#ff1a75] rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-all active:scale-95"
+                  aria-label="Remover imagem"
                 >
-                  <X size={10} className="text-white" />
+                  <X size={12} className="text-white" />
                 </button>
               </div>
             ))}
