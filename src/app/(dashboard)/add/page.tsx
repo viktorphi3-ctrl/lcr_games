@@ -423,16 +423,19 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
             {imagePreviews.map((src, i) => (
               <div
                 key={i}
-                className="relative w-24 h-24 rounded-xl overflow-hidden border border-[#1e1e1e] bg-[#0a0a0a] group"
+                className="relative w-24 h-24 rounded-xl overflow-hidden border border-[#1e1e1e] bg-[#0a0a0a]"
               >
                 <Image src={src} alt={`preview ${i}`} fill className="object-cover" />
                 <button
                   type="button"
-                  onClick={() => removeImage(i)}
-                  className="absolute top-1 right-1 w-6 h-6 bg-[#ff1a75]/90 hover:bg-[#ff1a75] rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-all active:scale-95"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    removeImage(i);
+                  }}
+                  className="absolute top-1 right-1 z-10 w-7 h-7 bg-[#ff1a75]/90 hover:bg-[#ff1a75] active:bg-[#ff1a75] rounded-full flex items-center justify-center shadow-lg backdrop-blur-sm transition-all"
                   aria-label="Remover imagem"
                 >
-                  <X size={12} className="text-white" />
+                  <X size={14} className="text-white" />
                 </button>
               </div>
             ))}
