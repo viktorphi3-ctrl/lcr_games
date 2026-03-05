@@ -1,28 +1,36 @@
-import { NextResponse } from "next/server";
-
 export const runtime = "edge";
 
-export async function GET() {
+export async function GET(request: Request) {
     try {
-        const debugData = {
+        const url = new URL(request.url);
+        const mode = url.searchParams.get("mode") || "standard";
+
+        // Diagnostic info
+        const info = {
+            status: "running",
+            mode,
+            runtime: "edge",
             timestamp: new Date().toISOString(),
-            env: {
-                NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL ? "Defined (Starts with: " + process.env.NEXT_PUBLIC_SUPABASE_URL.substring(0, 10) + "...)" : "Undefined",
-                NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "Defined (Length: " + process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length + ")" : "Undefined",
-                NODE_ENV: process.env.NODE_ENV,
-            },
-            headers: {
-                // Obfuscated or safe headers
-                host: "available",
+            env_access_test: mode === "keys" ? Object.keys(process.env).filter(k => k.startsWith("NEXT_PUBLIC_")) : "skipped",
+            variables: {
+                url: process.env.NEXT_PUBLIC_SUPABASE_URL ? "defined" : "undefined",
+                anon_key: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "defined" : "undefined",
             }
         };
 
-        return NextResponse.json(debugData);
-    } catch (error: any) {
-        return NextResponse.json({
-            error: "Debug route failed",
-            message: error.message,
-            stack: error.stack
-        }, { status: 500 });
+        return new Response(JSON.stringify(info, null, 2), {
+            status: 200,
+            headers: { "Content-Type": "application/json" }
+        });
+    } catch (err: any) {
+        return new Response(JSON.stringify({
+            status: "error",
+            message: err.message,
+            stack: err.stack,
+            hint: "Check Cloudflare log explorer for more details."
+        }, null, 2), {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+        });
     }
 }
