@@ -18,6 +18,7 @@ import {
   Globe,
   TrendingUp,
 } from "lucide-react";
+import { ImageGallery } from "@/components/collection/ImageGallery";
 import type { Item } from "@/types";
 import { DeleteItemButton } from "@/components/collection/DeleteItemButton";
 
@@ -65,56 +66,7 @@ export default async function ItemDetailPage({
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         {/* Gallery */}
-        <div className="space-y-3">
-          <div className="relative aspect-square bg-[#111111] rounded-2xl overflow-hidden border border-[#1e1e1e]">
-            {images[0] ? (
-              <Image
-                src={images[0]}
-                alt={item.title}
-                fill
-                className="object-contain p-4"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full">
-                {item.type === "console" ? (
-                  <Monitor size={64} className="text-[#2a2a2a]" />
-                ) : (
-                  <Gamepad2 size={64} className="text-[#2a2a2a]" />
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Thumbnails */}
-          <div className="flex gap-2">
-            {images.map((url, i) => (
-              <div
-                key={i}
-                className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 bg-[#111111] cursor-pointer transition-all ${i === 0
-                  ? "border-[#00e6e6] shadow-[0_0_10px_rgba(0,230,230,0.2)]"
-                  : "border-[#1e1e1e] hover:border-[#00e6e6]/50"
-                  }`}
-              >
-                <Image
-                  src={url}
-                  alt={`${item.title} ${i + 1}`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            ))}
-            {Array.from({ length: Math.max(0, 3 - images.length) }).map(
-              (_, i) => (
-                <div
-                  key={`empty-${i}`}
-                  className="w-20 h-20 rounded-xl border border-dashed border-[#222222] bg-[#0a0a0a] flex items-center justify-center"
-                >
-                  <span className="text-[#2a2a2a] text-lg font-light">+</span>
-                </div>
-              )
-            )}
-          </div>
-        </div>
+        <ImageGallery images={images} title={item.title} itemType={item.type} />
 
         {/* Info */}
         <div className="space-y-4">
