@@ -6,7 +6,7 @@ pages_build_output_dir = ".open-next/assets"
 
 [assets]
 directory = ".open-next/assets"
-binding = "ASSETS"
+binding = "NEXT_ASSETS"
 
 [vars]
 NEXT_PUBLIC_SUPABASE_URL = "https://ymowxyfhpifzvlhtgiuw.supabase.co"
