@@ -172,6 +172,7 @@ function ItemForm({ defaultValues, itemId, existingImages = [] }: ItemFormProps)
         platform: form.platform,
         condition: form.condition,
         box_condition: form.box_condition || null,
+        purchase_price: form.purchase_price ? (parseFloat(form.purchase_price) || 0) : null,
         market_value: form.market_value ? (parseFloat(form.market_value) || 0) : null,
         units_sold: form.units_sold ? (parseInt(form.units_sold) || 0) : null,
         developer: form.developer.trim() || null,
